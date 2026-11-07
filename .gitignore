@@ -1,0 +1,69 @@
+# ===== Environment variables =====
+.env
+.env.*
+!.env.example
+
+# ===== OS =====
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# ===== IDE / Editor =====
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.swp
+
+# ===== .NET / Visual Studio =====
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+*.nupkg
+packages/
+TestResults/
+
+# ===== Node.js =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+dist/
+build/
+.next/
+.cache/
+/out/
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# ===== Logs / temp =====
+logs/
+*.log
+*.tmp
+*.temp
+coverage/
