@@ -19,7 +19,17 @@ cp .env.example .env   # 이미 .env가 있으면 생략
 npm run dev
 ```
 
-http://localhost:3000 을 열고 `samples/sample-kakao.csv`로 테스트해 보세요.
+http://localhost:3000 을 열고 `samples/sample-kakao.csv` 또는 `samples/sample-kakao.txt`로 테스트해 보세요.
+
+## 개발용 명령
+
+| 명령 | 하는 일 |
+|---|---|
+| `npm run check` | 타입 검사 + lint + 테스트 |
+| `npm run test` | Vitest 테스트 (파서, 비밀값 검사 규칙) |
+| `npm run parse -- <파일>` | 파일을 앱과 같은 파서로 읽고 통계만 출력 (메시지 내용·이름은 출력하지 않음) |
+| `npm run smoke` | 샘플로 `/api/analyze`를 실제 호출해 결과 스키마까지 확인 (API 비용 발생) |
+| `npm run check-secrets` | 커밋 대상 파일에 API 키가 있는지, `.env.example`에 값이 들어갔는지 검사 |
 
 > API 키는 반드시 `.env`에 넣으세요. `.env.example`은 Git에 커밋되는 파일입니다.
 
@@ -58,5 +68,7 @@ Date,User,Message
 | `app/api/analyze/route.ts` | Claude API 호출 (서버에서만 키 사용) |
 | `lib/kakao-export.ts` | TXT/CSV 파싱과 참여자 통계 |
 | `lib/schema.ts` | 분석 결과 스키마 (zod, structured outputs) |
+| `lib/transcript.ts` | Claude에 보낼 대화 기록 만들기, 길이 한도 |
+| `scripts/` | 개발용 스크립트 (`parse`, `smoke`, `check-secrets`) |
 
 모델은 `claude-opus-5-5`이고, 거절 응답이 오면 서버 측 fallback(`fallbacks: "default"`)으로 다른 모델이 다시 시도합니다.

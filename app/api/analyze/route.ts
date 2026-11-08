@@ -1,9 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { AnalysisSchema, type ChatMessage } from "@/lib/schema";
-
-// 대화 텍스트가 이보다 길면 잘라내지 않고 에러로 알린다 (약 1M 토큰 근처)
-const MAX_CHARS = 2_000_000;
+import { buildTranscript, MAX_CHARS } from "@/lib/transcript";
 
 const SYSTEM_PROMPT = `너는 단체 채팅방 방장의 비서다. 방장이 대화를 다 읽지 않아도 상황을 파악하고 바로 움직일 수 있게 정리해 준다.
 
@@ -45,9 +43,7 @@ export async function POST(request: Request) {
     return errorResponse("분석할 메시지가 없어요.", 400);
   }
 
-  const transcript = messages
-    .map((m) => `[${m.date}] ${m.user}: ${m.message}`)
-    .join("\n");
+  const transcript = buildTranscript(messages);
 
   if (transcript.length > MAX_CHARS) {
     return errorResponse(

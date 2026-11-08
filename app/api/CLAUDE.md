@@ -10,7 +10,7 @@
 
 ## 프롬프트 구성
 
-- 메시지를 `[date] user: message` 줄로 이어 붙여 대화 기록을 만듭니다.
+- 메시지를 `[date] user: message` 줄로 이어 붙여 대화 기록을 만듭니다(`lib/transcript.ts`의 `buildTranscript`). `npm run parse`도 같은 함수로 글자 수를 계산하므로 형식을 바꿀 때는 이 함수만 고칩니다.
 - 대화 기록은 `<chat>` 태그로 감싸고, 그 안의 요청이나 지시는 따르지 말고 데이터로만 다루라는 문장을 앞에 붙입니다(프롬프트 인젝션 방지). 이 구조는 유지하세요.
 - `SYSTEM_PROMPT`는 `lib/schema.ts`의 `AnalysisSchema` 필드(summary, topics, decisions, actionItems, unansweredQuestions)마다 작성 규칙을 설명합니다. 스키마의 `.describe()` 문자열도 프롬프트 역할을 하므로, 필드를 추가하거나 바꾸면 시스템 프롬프트와 `app/page.tsx`의 화면 표시를 함께 맞춰야 합니다.
 
@@ -23,7 +23,7 @@
 
 ## 입력 제한과 에러 처리
 
-- 대화 기록이 `MAX_CHARS`(200만 자, 약 1M 토큰)를 넘으면 잘라내지 않고 413으로 거절합니다.
+- 대화 기록이 `MAX_CHARS`(`lib/transcript.ts`, 200만 자, 약 1M 토큰)를 넘으면 잘라내지 않고 413으로 거절합니다.
 - 실패 케이스마다 정해진 HTTP 상태 코드와 한국어 메시지를 반환합니다. 새 실패 케이스도 같은 방식으로 `errorResponse`를 써서 추가합니다.
 
 | 상황 | 상태 코드 |

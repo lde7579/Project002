@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON \"$CLAUDE_PROJECT_DIR/scripts/check-secrets.ts\" --hook",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

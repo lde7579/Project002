@@ -15,5 +15,7 @@
 - `parseKakaoExport(text, fileName)`은 파일 확장자를 보거나 `[이름] [오전 9:02]` 형식의 줄이 있는지 확인해서 TXT/CSV를 고릅니다.
 - TXT: 날짜 구분선(`--- 2026년 1월 14일 수요일 ---`)으로 현재 날짜를 정합니다. `[이름] [시간]` 접두어가 없는 줄은 앞 메시지에 이어 붙입니다(여러 줄 메시지). 오전/오후는 24시간제로 바꿉니다.
 - CSV: papaparse로 읽습니다. 컬럼은 영어/한글 헤더 별칭(`DATE_KEYS` / `USER_KEYS` / `MESSAGE_KEYS`)으로 찾습니다.
-- `SYSTEM_LINE_PATTERNS`(입장/퇴장/삭제 알림)와 `NOISE_MESSAGE_PATTERNS`(사진, 이모티콘, 동영상 등)로 내용이 없는 메시지를 걸러냅니다.
+- `SYSTEM_LINE_PATTERNS`(입장/퇴장/삭제 알림)와 `NOISE_MESSAGE_PATTERNS`(사진, 이모티콘, 동영상 등)로 내용이 없는 메시지를 걸러냅니다. 두 필터 모두 TXT/CSV 공통 단계(`parseKakaoExport`)에서 메시지 본문 전체에 적용합니다. TXT에서는 `[영희] [오후 3:01] 삭제된 메시지입니다.`처럼 알림이 일반 메시지 형식으로도 들어오기 때문입니다. TXT 파서 안에서는 접두어 없는 시스템 줄을 만나면 앞 메시지에 이어 붙이지 않도록 끊기만 합니다.
+- 동작은 `lib/kakao-export.test.ts`에 고정되어 있습니다. `samples/sample-kakao.txt`와 `samples/sample-kakao.csv`의 메시지 수와 기간도 회귀 테스트로 확인하므로, 샘플을 고치면 테스트 기대값도 같이 고칩니다.
+- Claude에 보내는 대화 기록(`[date] user: message` 줄)과 길이 한도 `MAX_CHARS`는 `lib/transcript.ts`에 있습니다. API 라우트와 `npm run parse`가 같이 씁니다.
 - 결과는 `{ ok: true, format, messages, stats }` 또는 `{ ok: false, error }` 형태입니다. 에러 메시지는 화면에 그대로 보여 주므로 한국어로 씁니다.

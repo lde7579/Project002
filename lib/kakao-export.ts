@@ -31,8 +31,14 @@ export function parseKakaoExport(text: string, fileName = ""): ParseResult {
   const parsed = isTxt ? parseTxt(clean) : parseCsv(clean);
   if ("error" in parsed) return { ok: false, error: parsed.error };
 
+  // 시스템 알림은 TXT/CSV 공통으로 여기서 거른다. (TXT에서는 "[영희] [오후 3:01] 삭제된 메시지입니다."처럼
+  // 일반 메시지 형식으로 들어오기도 해서, 접두어 없는 줄만 거르면 빠진다.)
   const messages = parsed.messages.filter(
-    (m) => m.user && m.message && !NOISE_MESSAGE_PATTERNS.some((p) => p.test(m.message)),
+    (m) =>
+      m.user &&
+      m.message &&
+      !SYSTEM_LINE_PATTERNS.some((p) => p.test(m.message)) &&
+      !NOISE_MESSAGE_PATTERNS.some((p) => p.test(m.message)),
   );
   if (messages.length === 0) {
     return { ok: false, error: "파일에 분석할 메시지가 없어요." };
@@ -118,13 +124,11 @@ function parseCsv(text: string): { messages: ChatMessage[] } | { error: string }
     };
   }
 
-  const messages = result.data
-    .map((row) => ({
-      date: dateCol ? (row[dateCol] ?? "").trim() : "",
-      user: (row[userCol] ?? "").trim(),
-      message: (row[messageCol] ?? "").trim(),
-    }))
-    .filter((m) => !SYSTEM_LINE_PATTERNS.some((p) => p.test(m.message)));
+  const messages = result.data.map((row) => ({
+    date: dateCol ? (row[dateCol] ?? "").trim() : "",
+    user: (row[userCol] ?? "").trim(),
+    message: (row[messageCol] ?? "").trim(),
+  }));
   return { messages };
 }
 
